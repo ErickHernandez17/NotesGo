@@ -1,6 +1,11 @@
 package note
 
-import "time"
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"time"
+)
 
 type Note struct {
 	Title     string
@@ -22,4 +27,19 @@ func (n *Note) String() string {
 
 func (n *Note) Json() string {
 	return `{"title": "` + n.Title + `", "body": "` + n.Body + `", "created_at": "` + n.CreatedAt + `"}`
+}
+
+func (n *Note) Save() error {
+	fileName := n.Title + `.json`
+
+	json, err := json.Marshal(n)
+
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(fileName, json, 0644)
+}
+func (n *Note) Display() {
+	fmt.Println(n.Title, n.Body)
 }
